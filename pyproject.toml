@@ -2,7 +2,7 @@
 name = "neuralnet"
 version = "0.1.0"
 description = ""
-authors = ["Keegan Birt <kbirt25@icloud.com>"]
+authors = ["Keegan Birt <kbirt@birtdata.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
