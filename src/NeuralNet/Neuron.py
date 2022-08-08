@@ -8,7 +8,7 @@ class Neuron:
     _weights: array
     _bias: float
 
-    def __init__(self, weights: List[float], bias: float, act_func: Optional[Callable] = None):
+    def __init__(self, weights: List[float], bias: float, act_func: Optional[Callable[[List[float]], float]] = None):
         self._activation_func = act_func or (lambda x: x)
 
         self._weights = array(weights)

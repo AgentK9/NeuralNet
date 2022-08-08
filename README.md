@@ -1,0 +1,1 @@
+inspiration from [nnfs.io](https://nnfs.io)
