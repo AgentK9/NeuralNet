@@ -24,7 +24,9 @@ class Layer:
                 )
             )
 
-    def forward(self, inputs: List[float], start: Optional[bool] = None, normalized: bool = False):
-        if start:
-            return [self._neurons[i].forward(inputs) for i in range(len(self._neurons))]
-        return [n.forward(inputs) if not normalized else n.norm_forward(inputs) for n in self._neurons]
+    def forward(self, inputs: List[float]):
+        outputs = [n.forward(inputs) for n in self._neurons]
+        results = []
+        for n, out in zip(self._neurons, outputs):
+            results.append(n.activation_func(out, outputs))
+        return results

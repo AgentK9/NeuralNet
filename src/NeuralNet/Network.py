@@ -27,15 +27,12 @@ class Network:
                              f"({len(inputs)} != {self._heights[0]})")
         last_outputs: List[float] = inputs
         for i, layer in enumerate(self._layers):
-            last_outputs = layer.forward(last_outputs, start=i == 0)
+            last_outputs = layer.forward(last_outputs)
 
         return last_outputs
 
     def batch_forward(self, inputs: List[List[float]]) -> List[List[float]]:
-        batch = []
-        for i in inputs:
-            batch.append(self.forward(i))
-        return batch
+        return [self.forward(i) for i in inputs]
 
 
 if __name__ == '__main__':

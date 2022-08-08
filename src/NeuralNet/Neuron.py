@@ -4,23 +4,24 @@ from numpy import dot, array
 
 
 class Neuron:
-    _activation_func: Callable
+    activation_func: Callable
     _weights: array
     _bias: float
 
-    def __init__(self, weights: List[float], bias: float, act_func: Optional[Callable[[List[float]], float]] = None):
-        self._activation_func = act_func or (lambda x: x)
+    def __init__(
+        self,
+        weights: List[float],
+        bias: float,
+        act_func: Optional[Callable[[float, List[float]], float]] = None
+     ):
+        self.activation_func = act_func or (lambda x, _: x)
 
         self._weights = array(weights)
         self._bias = bias
 
     def forward(self, inputs: List[float]) -> float:
-        return self._activation_func((dot(self._weights, inputs) + self._bias))
+        return dot(self._weights, inputs) + self._bias
 
-    def norm_forward(self, inputs: List[float]) -> float:
-        in_total = sum(inputs)
-        norm_vals = [v/in_total for v in inputs]
-        return self.forward(norm_vals)
 
 
 if __name__ == '__main__':
