@@ -17,7 +17,7 @@ def rec_linear_func(X: float, _: List[float]) -> float:
 
 
 def softmax_func(X: float, inputs: List[float]) -> List[float]:
-    return np.exp(X) / np.sum(np.exp(inputs))
+    return np.exp(X - np.max(inputs)) / np.sum(np.exp(inputs))
 
 
 if __name__ == '__main__':

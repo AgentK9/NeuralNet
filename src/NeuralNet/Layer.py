@@ -1,4 +1,3 @@
-import random
 from typing import List, Callable, Optional
 
 import numpy as np
@@ -18,13 +17,16 @@ class Layer:
             # not sure if input neurons need to be specified....
             self._neurons.append(
                 Neuron(
-                    0.01 * np.random.randn(in_height),  # n_inputs
                     0,
                     act_func
                 )
             )
 
-    def forward(self, inputs: List[float]):
+    def set_weights(self, weights: np.array):
+        for i, w in enumerate(weights):
+            self._neurons[i].set_weights(w)
+
+    def forward(self, inputs: np.array):
         outputs = [n.forward(inputs) for n in self._neurons]
         # print(inputs, outputs)
         results = []
