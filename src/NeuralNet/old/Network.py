@@ -1,4 +1,3 @@
-import random
 from typing import List, Optional, Callable, Tuple, Type
 
 import numpy as np
@@ -7,9 +6,14 @@ from Layer import Layer
 from src.NeuralNet.loss.Loss import Loss
 
 
+def set_random_weights(weights: np.array) -> np.array:
+    return 0.01 * np.random.random_sample(weights.shape)
+
+
 class Network:
     _heights: List[Tuple[int, Optional[Callable]]]
     _layers: List[Layer]
+    _run_once: bool = True
 
     def __init__(
         self,
@@ -26,25 +30,49 @@ class Network:
             height, act_func = self._heights[i]
             self._layers.append(
                 Layer(
-                    in_height=self._heights[i - 1][0],
+                    # in_height=self._heights[i - 1][0],
                     out_height=height,
                     act_func=act_func,
                 )
             )
-        self.set_weights(weights)
+        self.set_weights(weights=weights)
+
+    def get_weights(self) -> np.array:
+        return np.array([
+            layer.get_weights()
+            for layer in self._layers
+        ])
 
     def set_weights(self, weights: Optional[np.array] = None):
         for i, layer in enumerate(self._layers):
-            if not weights or not weights[i]:  # randomize the weights for this layer if the heights do not exist.
-                layer.set_weights(0.01 * np.random.randn(self._heights[i - 1][0]))
+            if weights is None:  # randomize the weights for this layer if the heights do not exist.
+                layer.set_weights(0.01 * np.random.randn(self._heights[i+1][0]))
             else:
                 layer.set_weights(weights[i])
 
-    def optimize(self):
-        pass
+    def optimize(self, n: int, n_plus_one_weights: Callable, x: np.array, y: np.array) -> float:
+        lowest_loss = 99999
+        best_weights = self.get_weights()
+        best_accuracy = 0.0
+        accuracy = 0.0
+        for iteration in range(n):
+            self.set_weights(n_plus_one_weights(self.get_weights()))
+            self.batch_forward(x)
+            loss = self.calculate_loss(y)
+            predictions = np.argmax(self._output, axis=1)
+            accuracy = np.mean(predictions == y)
+            if loss < lowest_loss:
+                print(f"New best weights at iter {iteration}\nLoss: {loss}\nAcc: {accuracy}")
+                best_weights = self.get_weights()
+                lowest_loss = loss
+                best_accuracy = accuracy
+            if iteration % (n/20) == 0:
+                print(f"Iter {iteration}. Accuracy: {best_accuracy}")
+        self.set_weights(best_weights)
+        return best_accuracy
 
-    def optimize_randomly(self):
-        pass
+    def optimize_randomly(self, n: int, x: np.array, y: np.array) -> float:
+        return self.optimize(n=n, n_plus_one_weights=set_random_weights, x=x, y=y)
 
     def forward(self, inputs: np.array) -> np.array:
         if len(inputs) != self._heights[0][0]:
@@ -52,8 +80,13 @@ class Network:
                              f"({len(inputs)} != {self._heights[0][0]})")
         last_outputs: np.array = inputs
         for layer in self._layers:
+            if self._run_once:
+                print(last_outputs)
             # print(last_outputs)
             last_outputs = layer.forward(last_outputs)
+        if self._run_once:
+            print(last_outputs)
+            self._run_once = False
         # print(last_outputs[0][0].shape)
         self._output = last_outputs
         return self._output
@@ -68,9 +101,3 @@ class Network:
         self._output = np.apply_along_axis(self.forward, axis=1, arr=inputs)
 
         return self._output
-
-
-if __name__ == '__main__':
-    randNet = Network([1, 3, 3, 2])
-    x = randNet.forward([random.uniform(-10.0, 10.0)])
-    # print(x)

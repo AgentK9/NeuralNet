@@ -17,12 +17,12 @@ def rec_linear_func(X: float, _: List[float]) -> float:
 
 
 def softmax_func(X: float, inputs: List[float]) -> List[float]:
-    return np.exp(X - np.max(inputs)) / np.sum(np.exp(inputs))
+    exp_vals = np.exp(X - np.max(inputs))
+    return exp_vals / np.sum(exp_vals)
 
 
 if __name__ == '__main__':
     arr = [1, 2, 3]
     for x in arr:
-        pass
-        # print(softmax_func(x, arr))
+        print(softmax_func(x, arr))
 

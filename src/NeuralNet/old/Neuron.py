@@ -20,6 +20,9 @@ class Neuron:
         self.set_weights(weights)
         self._bias = bias
 
+    def get_weights(self) -> np.array:
+        return self._weights
+
     def set_weights(self, weights: np.array):
         self._weights = weights
 
@@ -40,4 +43,4 @@ if __name__ == '__main__':
         Neuron(3, weights=[0.5, -0.91, 0.26, -0.5]),
         Neuron(0.5, weights=[-0.26, -0.27, 0.17, 0.87])
     ]
-    # print([n.forward(inputs) for n in neurons])
+    print([n.forward(inputs) for n in neurons])
