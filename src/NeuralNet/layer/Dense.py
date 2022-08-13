@@ -6,6 +6,7 @@ import numpy as np
 class Dense:
     _n_inputs: int
     _n_neurons: int
+    weights: np.array
 
     @property
     def weights(self):
@@ -15,8 +16,8 @@ class Dense:
     def weights(self, value: np.array):
         self._weights = value
 
-    def randomize_weights(self):
-        self._weights = 0.05 * np.random.randn(self._n_inputs, self._n_neurons)
+    def randomize_weights(self, factor: float = 0.05):
+        self._weights = factor * np.random.randn(self._n_inputs, self._n_neurons)
 
     def randomly_adjust_weights(self):
         self._weights += 0.05 * np.random.randn(self._n_inputs, self._n_neurons)
@@ -41,7 +42,7 @@ class Dense:
         self._n_inputs = n_inputs
         self._n_neurons = n_neurons
         self._weights = []
-        self.randomize_weights()
+        self.randomize_weights(factor=0.01)
         self._biases = np.zeros((1, n_neurons))
         self._output = None
 

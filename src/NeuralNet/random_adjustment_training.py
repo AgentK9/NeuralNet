@@ -31,7 +31,7 @@ best_l1_biases = l1.biases.copy()
 best_l2_weights = l2.weights.copy()
 best_l2_biases = l2.biases.copy()
 
-for i in range(5415):
+for i in range(5500):
     l1.randomly_adjust_weights()
     l1.randomly_adjust_biases()
     l2.randomly_adjust_weights()
@@ -46,8 +46,7 @@ for i in range(5415):
     accuracy = acc_fn.calculate(o4, y)
 
     if loss < lowest_loss:
-        print("New set of weights found:")
-        print(f"\tIteration: {i}\n\tLoss: {loss}\n\tAccuracy: {accuracy}")
+        print('New set of weights found, iteration:', i, 'loss:', loss, 'acc:', accuracy)
         best_l1_weights = l1.weights.copy()
         best_l1_biases = l1.biases.copy()
         best_l2_weights = l2.weights.copy()
